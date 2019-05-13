@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="Student">
+        <id column="pkid" jdbcType="VARCHAR" property="pkid"/>
+        <result column="xh" jdbcType="VARCHAR" property="xh"/>
+        <result column="xm" jdbcType="VARCHAR" property="xm"/>
+        <result column="year" jdbcType="VARCHAR" property="year"/>
+        <result column="class_key" jdbcType="VARCHAR" property="classKey"/>
+        <result column="major_key" jdbcType="VARCHAR" property="majorKey"/>
+        <result column="department_key" jdbcType="VARCHAR" property="departmentKey"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    pkid, xh, xm, year, class_key, major_key, department_key, phone
+    </sql>
+    <select id="findStudent" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        <where>
+            <if test="xm!=null and xm!='' ">
+                and xm like #{xm}
+            </if>
+        </where>
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+    <select id="getDepartmentList" resultType="java.util.HashMap">
+        select t.pkid as value,t.department_name as text
+        from department t
+    </select>
+    <select id="getMajorList" parameterType="String" resultType="java.util.HashMap">
+        select t.pkid as value,t.major_name as text
+        from major t
+        WHERE t.department_key=#{departmentKey}
+    </select>
+    <select id="getClassList" parameterType="String" resultType="java.util.HashMap">
+        select t.pkid as value,t.class_name as text
+        from class t
+        WHERE t.major_key=#{majorKey}
+    </select>
+    <select id="getTotalStudent" parameterType="Map" resultType="Long">
+        select count(*) from student
+        <where>
+            <if test="xm!=null and xm!='' ">
+                and xm like #{xm}
+            </if>
+        </where>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where pkid = #{pkid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete from student
+        <where>
+            pkid
+            <foreach collection="array" item="pkid" open="in (" close=")" separator=",">
+                #{pkid}
+            </foreach>
+        </where>
+    </delete>
+    <insert id="insert" parameterType="com.wq.entity.Student">
+    insert into student (pkid, xh, xm, 
+      year, class_key, major_key, 
+      department_key, phone)
+    values (#{pkid,jdbcType=VARCHAR}, #{xh,jdbcType=VARCHAR}, #{xm,jdbcType=VARCHAR}, 
+      #{year,jdbcType=VARCHAR}, #{classKey,jdbcType=VARCHAR}, #{majorKey,jdbcType=VARCHAR}, 
+      #{departmentKey,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.wq.entity.Student">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pkid != null">
+                pkid,
+            </if>
+            <if test="xh != null">
+                xh,
+            </if>
+            <if test="xm != null">
+                xm,
+            </if>
+            <if test="year != null">
+                year,
+            </if>
+            <if test="classKey != null">
+                class_key,
+            </if>
+            <if test="majorKey != null">
+                major_key,
+            </if>
+            <if test="departmentKey != null">
+                department_key,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pkid != null">
+                #{pkid,jdbcType=VARCHAR},
+            </if>
+            <if test="xh != null">
+                #{xh,jdbcType=VARCHAR},
+            </if>
+            <if test="xm != null">
+                #{xm,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="classKey != null">
+                #{classKey,jdbcType=VARCHAR},
+            </if>
+            <if test="majorKey != null">
+                #{majorKey,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentKey != null">
+                #{departmentKey,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.wq.entity.Student">
+        update student
+        <set>
+            <if test="xh != null">
+                xh = #{xh,jdbcType=VARCHAR},
+            </if>
+            <if test="xm != null">
+                xm = #{xm,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="classKey != null">
+                class_key = #{classKey,jdbcType=VARCHAR},
+            </if>
+            <if test="majorKey != null">
+                major_key = #{majorKey,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentKey != null">
+                department_key = #{departmentKey,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where pkid = #{pkid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.wq.entity.Student">
+    update student
+    set xh = #{xh,jdbcType=VARCHAR},
+      xm = #{xm,jdbcType=VARCHAR},
+      year = #{year,jdbcType=VARCHAR},
+      class_key = #{classKey,jdbcType=VARCHAR},
+      major_key = #{majorKey,jdbcType=VARCHAR},
+      department_key = #{departmentKey,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR}
+    where pkid = #{pkid,jdbcType=VARCHAR}
+  </update>
+</mapper>

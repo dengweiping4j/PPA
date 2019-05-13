@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mapper.PolicyMapper">
+    <resultMap id="BaseResultMap" type="com.wq.entity.Policy">
+        <id column="pkid" jdbcType="VARCHAR" property="pkid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="text" jdbcType="VARCHAR" property="text"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    pkid, title, text
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from policy
+        where pkid = #{pkid,jdbcType=VARCHAR}
+    </select>
+    <select id="getPolicyList" resultType="java.util.HashMap">
+        select t.pkid as value,t.title as text
+        from policy t
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete from policy
+        <where>
+            pkid
+            <foreach collection="array" item="pkid" open="in (" close=")" separator=",">
+                #{pkid}
+            </foreach>
+        </where>
+    </delete>
+    <insert id="insert" parameterType="com.wq.entity.Policy">
+    insert into policy (pkid, title, text
+      )
+    values (#{pkid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.wq.entity.Policy">
+    update policy
+    set title = #{title,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR}
+    where pkid = #{pkid,jdbcType=VARCHAR}
+  </update>
+</mapper>

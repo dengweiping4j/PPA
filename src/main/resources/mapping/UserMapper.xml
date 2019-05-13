@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mapper.UserMapper">
+    <resultMap type="User" id="UserResult">
+        <result property="pkid" column="pkid"/>
+        <result property="userName" column="user_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+    <select id="login" parameterType="User" resultMap="UserResult">
+        select user_name,password from
+        user where user_id=#{userId} and password=#{password} limit 1
+    </select>
+
+    <insert id="addUser" parameterType="User">
+        insert into user(pkid,user_id,user_name,password,phone)
+        values(#{pkid},#{userId},#{userName},#{password},#{phone})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user
+        <set>
+            <if test="userName!=null and userName!='' ">
+                user_name=#{userName},
+            </if>
+            <if test="userId!=null and userId!='' ">
+                user_id=#{userId}
+            </if>
+            <if test="password!=null and password!='' ">
+                password=#{password}
+            </if>
+            <if test="phone!=null and phone!='' ">
+                phone=#{phone}
+            </if>
+        </set>
+        where pkid=#{pkid}
+    </update>
+    <delete id="deleteByPrimaryKey">
+        delete from user
+        <where>
+            pkid
+            <foreach  collection="array" item="pkid" open="in (" close=")" separator=",">
+                #{pkid}
+            </foreach>
+        </where>
+    </delete>
+</mapper>

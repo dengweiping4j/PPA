@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wq.mapper.PersonMapper">
+    <resultMap id="BaseResultMap" type="com.wq.entity.Person">
+        <id column="pkid" jdbcType="VARCHAR" property="pkid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="level" jdbcType="VARCHAR" property="level"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="capacity" jdbcType="VARCHAR" property="capacity"/>
+        <result column="policy" jdbcType="VARCHAR" property="policy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    pkid, name, sex, age, address, phone, level, reason, capacity, policy
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from person
+        where pkid = #{pkid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete from person
+        <where>
+            pkid
+            <foreach collection="array" item="pkid" open="in (" close=")" separator=",">
+                #{pkid}
+            </foreach>
+        </where>
+    </delete>
+    <insert id="insert" parameterType="com.wq.entity.Person">
+    insert into person (pkid, name, sex, 
+      age, address, phone, 
+      level, reason, capacity, 
+      policy)
+    values (#{pkid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{age,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{capacity,jdbcType=VARCHAR}, 
+      #{policy,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.wq.entity.Person">
+    update person
+    set name = #{name,jdbcType=VARCHAR},
+    sex = #{sex,jdbcType=VARCHAR},
+    age = #{age,jdbcType=INTEGER},
+    address = #{address,jdbcType=VARCHAR},
+    phone = #{phone,jdbcType=VARCHAR},
+    level = #{level,jdbcType=VARCHAR},
+    reason = #{reason,jdbcType=VARCHAR},
+    capacity = #{capacity,jdbcType=VARCHAR},
+    policy = #{policy,jdbcType=VARCHAR}
+    where pkid = #{pkid,jdbcType=VARCHAR}
+</update>
+    <update id="updateSelect" parameterType="java.util.Map">
+        update person
+        set policy = #{policy,jdbcType=VARCHAR}
+        where pkid = #{pkid,jdbcType=VARCHAR}
+    </update>
+</mapper>
